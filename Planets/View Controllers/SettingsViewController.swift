@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol SettingsViewControllerDelegate {
+    
+}
+
 class SettingsViewController: UIViewController {
 
     @IBOutlet weak var shouldShowPlutoSwitch: UISwitch!
@@ -18,12 +22,24 @@ class SettingsViewController: UIViewController {
     }
     
     private func updateViews() {
-        let userDefaults = UserDefaults.standard
-        shouldShowPlutoSwitch.isOn = userDefaults.bool(forKey: .shouldShowPlutoKey)
+//        let userDefaults = UserDefaults.standard
+        shouldShowPlutoSwitch.isOn = UserDefaults.standard.bool(forKey: .shouldShowPlutoKey)
+        
     }
     
     @IBAction func changeShouldShowPluto(_ sender: UISwitch) {
+        
+        
+        // notifications are event-based triggers (one to many calls)
+        // The toggle was just switched
+        
+        // save to user defaults
         let userDefaults = UserDefaults.standard
         userDefaults.set(sender.isOn, forKey: .shouldShowPlutoKey)
+        
+        // notify everyone (interested) that we should change plutos status as a planet
+        // 1. NotificationCenter is creating a NotificationObject with the given name
+        // 2. (Optional) NC is attaching an object to NotificationObject
+        NotificationCenter.default.post(name: .plutoPlanetStatusChanged, object: nil)
     }
 }

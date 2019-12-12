@@ -19,7 +19,20 @@ class PlanetsCollectionViewController: UICollectionViewController {
     var planets: [Planet] {
         let shouldShowPluto = UserDefaults.standard.bool(forKey: .shouldShowPlutoKey)
         return shouldShowPluto ? planetController.planetsWithPluto : planetController.planetsWithoutPluto
+        
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // listen for pluto status change
+        NotificationCenter.default.addObserver(self, selector: #selector(updatePlanets), name: .plutoPlanetStatusChanged, object: nil)
+    }
+    
+    @objc func updatePlanets() {
+        collectionView.reloadData()
+    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
